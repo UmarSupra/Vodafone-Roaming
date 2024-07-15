@@ -16,4 +16,4 @@ load_dotenv()
 async def random_function(
     api_key: str = Security(authenticate_api_key)
 ):
-    return("hi")
+    return JSONResponse(content="hi")
