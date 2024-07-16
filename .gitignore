@@ -1,2 +1,4 @@
 venv
 .env
+apps/roaming-charges/__pycache__/
+apps/roaming-charges/endpoints/__pycache__/

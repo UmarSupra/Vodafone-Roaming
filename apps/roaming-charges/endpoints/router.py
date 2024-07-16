@@ -2,8 +2,12 @@ from fastapi import APIRouter, Response, Security, requests, HTTPException
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 
-from endpoints.data_model import List_Response
-from endpoints.data_model import String_Response
+from langchain_ibm import ChatWatsonx
+from langchain_core.tools import tool
+from langchain_core.messages import HumanMessage, ToolMessage
+
+
+from endpoints.data_model import String_Response, Roaming
 
 from dotenv import load_dotenv
 
@@ -15,6 +19,23 @@ import logging, os, json
 
 router = APIRouter()
 load_dotenv()
+
+api_key=os.environ.get("WATSONX_APIKEY")
+ibm_cloud_url=os.environ.get("WATSONX_URL")
+project_id=os.environ.get("WATSONX_PROJECT_ID")
+
+params = {
+    "decoding_method": "greedy",
+    "max_new_tokens": 200,
+    "min_new_tokens": 1,
+}
+
+chat = ChatWatsonx(
+    model_id="mistralai/mixtral-8x7b-instruct-v01",
+    url=ibm_cloud_url,
+    project_id=project_id,
+    params=params,
+)
 
 postgres = QueryPostgres()
 
@@ -31,3 +52,45 @@ async def random_function_2(
 ):
     response = postgres.postgres(query)
     return response
+
+@router.post("/phone-number-sql-query")
+async def phone_number_to_plan_type(
+    phone_number: str,
+    api_key: str = Security(authenticate_api_key)
+):
+    response = postgres.postgres(f"""
+            SELECT plan_type
+            FROM customer 
+            WHERE mobile_number ='{phone_number}';
+        """)
+    return(response[0][0])
+
+@tool
+def roaming(country:str) -> int:
+    """Fetches a roaming charge for a country"""
+    return(postgres.postgres(f"""
+            SELECT charge
+            FROM roaming_charges
+            WHERE country = '{country}';
+        """))
+
+@router.post("/langchain-example")
+async def langchain_example_1(
+    api_key: str = Security(authenticate_api_key)
+):
+    llm_with_tools = chat.bind_tools([Roaming])
+    messages = [HumanMessage("What is the roaming charge for France? Give me a verbose answer. Do not repeat the question in the response.")]
+    print("messages", messages)
+    ai_msg = llm_with_tools.invoke(messages)
+    print("aimsg", ai_msg)
+    messages.append(ai_msg)
+
+    for tool_call in ai_msg.tool_calls:
+        selected_tool = {"roaming": roaming}[tool_call["name"].lower()]
+        print(selected_tool)
+        tool_msg = selected_tool.invoke(tool_call)
+        messages.append(tool_msg)
+        print("..", messages)
+
+    result = llm_with_tools.invoke(messages)
+    return (result.content)

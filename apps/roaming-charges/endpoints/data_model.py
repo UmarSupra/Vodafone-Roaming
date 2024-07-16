@@ -1,7 +1,7 @@
-from pydantic import BaseModel
-
-class List_Response(BaseModel):
-    response: list[str]
+from pydantic import BaseModel, Field
 
 class String_Response(BaseModel):
     response: str
+
+class Roaming(BaseModel):
+    country: str = Field(..., description="a location")
