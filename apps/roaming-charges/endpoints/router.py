@@ -53,7 +53,7 @@ async def random_function_2(
     response = postgres.postgres(query)
     return response
 
-@router.post("/phone-number-sql-query")
+@router.post("/phone-number-sql-query", response_model=String_Response)
 async def phone_number_to_plan_type(
     phone_number: str,
     api_key: str = Security(authenticate_api_key)
@@ -63,7 +63,8 @@ async def phone_number_to_plan_type(
             FROM customer 
             WHERE mobile_number ='{phone_number}';
         """)
-    return(response[0][0])
+    plan_type = response[0][0]
+    return({"response": plan_type})
 
 @tool
 def roaming(country:str) -> int:
