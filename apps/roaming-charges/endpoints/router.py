@@ -9,14 +9,25 @@ from dotenv import load_dotenv
 
 from auth import authenticate_api_key
 
+from services.postgres import QueryPostgres
 
 import logging, os, json
 
 router = APIRouter()
 load_dotenv()
 
+postgres = QueryPostgres()
+
 @router.post("/random", response_model=String_Response)
 async def random_function(
     api_key: str = Security(authenticate_api_key)
 ):
     return JSONResponse(content=jsonable_encoder("hi"))
+
+@router.post("/random2")
+async def random_function_2(
+    query: str,
+    api_key: str = Security(authenticate_api_key)
+):
+    response = postgres.postgres(query)
+    return response
