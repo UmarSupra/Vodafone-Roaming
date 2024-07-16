@@ -2,11 +2,6 @@ from fastapi import APIRouter, Response, Security, requests, HTTPException
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 
-from langchain_ibm import ChatWatsonx
-from langchain_core.tools import tool
-from langchain_core.messages import HumanMessage, ToolMessage
-
-
 from endpoints.data_model import String_Response, Roaming
 
 from dotenv import load_dotenv
@@ -23,19 +18,6 @@ load_dotenv()
 api_key=os.environ.get("WATSONX_APIKEY")
 ibm_cloud_url=os.environ.get("WATSONX_URL")
 project_id=os.environ.get("WATSONX_PROJECT_ID")
-
-params = {
-    "decoding_method": "greedy",
-    "max_new_tokens": 200,
-    "min_new_tokens": 1,
-}
-
-chat = ChatWatsonx(
-    model_id="mistralai/mixtral-8x7b-instruct-v01",
-    url=ibm_cloud_url,
-    project_id=project_id,
-    params=params,
-)
 
 postgres = QueryPostgres()
 
