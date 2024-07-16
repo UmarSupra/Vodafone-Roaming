@@ -65,33 +65,3 @@ async def phone_number_to_plan_type(
         """)
     plan_type = response[0][0]
     return({"response": plan_type})
-
-@tool
-def roaming(country:str) -> int:
-    """Fetches a roaming charge for a country"""
-    return(postgres.postgres(f"""
-            SELECT charge
-            FROM roaming_charges
-            WHERE country = '{country}';
-        """))
-
-@router.post("/langchain-example")
-async def langchain_example_1(
-    api_key: str = Security(authenticate_api_key)
-):
-    llm_with_tools = chat.bind_tools([Roaming])
-    messages = [HumanMessage("What is the roaming charge for France? Give me a verbose answer. Do not repeat the question in the response.")]
-    print("messages", messages)
-    ai_msg = llm_with_tools.invoke(messages)
-    print("aimsg", ai_msg)
-    messages.append(ai_msg)
-
-    for tool_call in ai_msg.tool_calls:
-        selected_tool = {"roaming": roaming}[tool_call["name"].lower()]
-        print(selected_tool)
-        tool_msg = selected_tool.invoke(tool_call)
-        messages.append(tool_msg)
-        print("..", messages)
-
-    result = llm_with_tools.invoke(messages)
-    return (result.content)
