@@ -22,7 +22,7 @@ postgres = QueryPostgres()
 async def random_function(
     api_key: str = Security(authenticate_api_key)
 ):
-    return JSONResponse(content=jsonable_encoder("hi"))
+    return {"response":"hi"}
 
 @router.post("/random2")
 async def random_function_2(
