@@ -26,11 +26,13 @@ class QueryPostgres:
 
                 result = cursor.fetchall()
                 try:
-                    if result:
-                        logging.info("Result: ", result)
-                    else:
-                        logging.error("Invalid query.")
+                    if not result:                        
                         raise PayLoadError()
+
+                except PayLoadError:
+                    raise HTTPException(
+                        status_code=500, detail="Your query did not return any responses."
+                    )
 
                 except PayLoadError:
                     raise HTTPException(
