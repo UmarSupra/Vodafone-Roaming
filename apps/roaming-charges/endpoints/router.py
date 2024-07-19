@@ -19,4 +19,4 @@ async def get_roaming_cost(
     country_prompt: str,
     api_key: str = Security(authenticate_api_key)
 ):
-    return main(phone_number, country_prompt)
+    return {"response": main(phone_number, country_prompt)}
