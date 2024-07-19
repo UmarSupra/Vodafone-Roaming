@@ -3,3 +3,6 @@ venv
 apps/roaming-charges/__pycache__/
 apps/roaming-charges/endpoints/__pycache__/
 router2.py
+.DS_Store
+apps/roaming-charges/services/__pycache__/
+apps/roaming-charges/exceptions/__pycache__/

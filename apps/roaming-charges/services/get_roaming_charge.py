@@ -92,9 +92,9 @@ def plan_type_and_country_to_roaming_cost_query(
     roaming_charge = response[0][0]
     return({"response": roaming_charge})
 
-def main(phone_number, from_country_name, to_country_name):
+def main(phone_number, country_prompt):
     # query = 'Im travelling to Belgium and Denmark. What are the roaming charges'
-    query='Im travelling to Paris and Dubai. What are the roaming charges?'
+    query=f'{country_prompt}'
 
     countries = (LLM_call(query))
 
