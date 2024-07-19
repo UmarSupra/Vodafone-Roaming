@@ -1,0 +1,159 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "OpenAPI UI",
+    "description": "Generated OpenAPI 3.0.0 version for Watson Assistant",
+    "version": "3.0.0",
+    "x-logo": {
+      "url": "https://fastapi.tiangolo.com/img/logo-margin/logo-teal.png"
+    }
+  },
+  "paths": {
+    "/api/get-roaming-cost": {
+      "post": {
+        "tags": [
+          "example"
+        ],
+        "summary": "Get Roaming Cost",
+        "operationId": "get_roaming_cost_api_get_roaming_cost_post",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Phone Number",
+              "type": "string"
+            },
+            "name": "phone_number",
+            "in": "query"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Country Prompt",
+              "type": "string"
+            },
+            "name": "country_prompt",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ]
+      }
+    },
+    "/": {
+      "get": {
+        "summary": "Health Check",
+        "operationId": "health_check__get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/protected": {
+      "get": {
+        "summary": "Protected Route",
+        "operationId": "protected_route_protected_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "HTTPValidationError": {
+        "title": "HTTPValidationError",
+        "type": "object",
+        "properties": {
+          "detail": {
+            "title": "Detail",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            }
+          }
+        }
+      },
+      "ValidationError": {
+        "title": "ValidationError",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "loc": {
+            "title": "Location",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "msg": {
+            "title": "Message",
+            "type": "string"
+          },
+          "type": {
+            "title": "Error Type",
+            "type": "string"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "APIKeyHeader": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-Key"
+      }
+    }
+  },
+  "servers": [
+    {
+      "url": "https://vodafone-roaming.1jeyp64xmij4.us-south.codeengine.appdomain.cloud/"
+    }
+  ]
+}
