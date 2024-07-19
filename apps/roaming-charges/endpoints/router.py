@@ -13,7 +13,7 @@ router = APIRouter()
 
 postgres = QueryPostgres()
 
-@router.post("/get-roaming-cost", response_model=String_Response)
+@router.post("/get-roaming-cost", response_model=str)
 async def get_roaming_cost(
     phone_number: str,
     country_prompt: str,
